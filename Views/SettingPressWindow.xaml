@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EmulatorPress.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="400" Background="DarkGray">
+             d:DesignHeight="350" d:DesignWidth="400" Background="DarkGray" >
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis" />
     </UserControl.Resources>
@@ -27,17 +27,17 @@
         <RadioButton Grid.Row="1" Grid.Column="0" Content="Случайное давление" IsChecked="{Binding IsRandoms}"  Margin="15"/>
         <RadioButton Grid.Row="2" Grid.Column="0" Content="Рост/падение" IsChecked="{Binding IsStep}"  Margin="15"/>
         <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" VerticalAlignment="Center">
-            <TextBlock Text="Минимальное давление" HorizontalAlignment="Center" IsEnabled="False" Visibility ="{Binding IsRandoms, Converter={StaticResource boolToVis}}"/>
+            <TextBlock Text="Диапозон" HorizontalAlignment="Center" IsEnabled="False" Visibility ="{Binding IsRandoms, Converter={StaticResource boolToVis}}"/>
             <TextBlock Text="Давление" HorizontalAlignment="Center" Visibility ="{Binding IsConstant, Converter={StaticResource boolToVis}}"/>
             <TextBlock Text="Шаг" HorizontalAlignment="Center" Visibility ="{Binding IsStep, Converter={StaticResource boolToVis}}"/>
             <TextBox Text="{Binding MinValue, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="20 0"/>
-            <TextBlock Text="Максимальное давление" HorizontalAlignment="Center" Visibility ="{Binding IsRandoms, Converter={StaticResource boolToVis}}"/>
+            <TextBlock Text="-" HorizontalAlignment="Center" Visibility ="{Binding IsRandoms, Converter={StaticResource boolToVis}}"/>
             <TextBox Text="{Binding MaxValue, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="20 0" Visibility ="{Binding IsRandoms, Converter={StaticResource boolToVis}}"/>
         </StackPanel>
-        <Button Content="Сохранить" 
-                Grid.Row="4" Grid.ColumnSpan="2"
-                Command="{Binding SaveSetting}" Margin="20 0" Height="30" Width="100" 
-                VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="2" VerticalAlignment="Center">
+            <Button Content="Сохранить" Command="{Binding SaveSetting}" Margin="10" Height="30" Width="100" />
+            <Button Content="Закрыть" Margin="10" Height="30" Width="100" Click="Button_Click"/>
+        </StackPanel>
 
 
 

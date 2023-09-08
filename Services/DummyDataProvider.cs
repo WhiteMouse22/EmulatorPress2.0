@@ -1,6 +1,4 @@
-﻿
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System;
@@ -22,12 +20,10 @@ namespace EmulatorPress.Services
     public class DummyDataProvider : IDataProvider
     {
         private readonly Random random = new();
-        private double lastPressure; // предыдущее значение давления
-        private double nextPressure; // следующее значение давления
-        private TimeSpan t = TimeSpan.FromSeconds(0); //координата Х
-        private int interval = 100; // интервал времени миллисекунды
-
-        public int X = 0;
+        private double lastPressure; 
+        private double nextPressure;
+        private int interval = 100; // интервал времени для каждой точки в миллисекундах
+        public int IntervalCounter = 0;
         public DispatcherTimer Timer = new(DispatcherPriority.Render);//Render - Операции обрабатываются с таким же приоритетом, как и отрисовка.
         public double Value;
         public double MaxValue;
@@ -35,16 +31,14 @@ namespace EmulatorPress.Services
 
         public void SubscribeUpdates(Action<XyValues> onDataUpdated)
         {
-            // LicenseManager.UsageMode Возвращает объект LicenseUsageMode,
-            // определяющий, когда можно использовать лицензированный объект для контекста CurrentContext.
             bool designMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
             if (designMode) return;
 
-            Timer.Interval = TimeSpan.FromMilliseconds(interval); //шаг
+            Timer.Interval = TimeSpan.FromMilliseconds(interval);
             Timer.Tick += (s, e) =>
             {
-                var xyValues = GenerateRandomWalk(); // генерируем новые координаты
-                onDataUpdated(xyValues);            // отправляем их на визуализацию
+                var xyValues = GenerateRandomWalk();
+                onDataUpdated(xyValues);
             };
         }
         private XyValues GenerateRandomWalk()
@@ -55,7 +49,6 @@ namespace EmulatorPress.Services
                 YValues = new List<double>(),
             };
 
-
             double step; // шаг изменения давления
 
             if (signalType == SignalType.Constant) // режим постоянного давления
@@ -64,25 +57,29 @@ namespace EmulatorPress.Services
             }
             else if (signalType == SignalType.Randoms) // режим случайного давления
             {
-                lastPressure = Value;
-                if (MaxValue - Value < 5)
+                var MinValue = Value;
+                var rangeValue = MaxValue - MinValue;
+                lastPressure = MinValue;
+                if (MaxValue - MinValue < 5)
                     step = random.NextDouble() * random.Next(-10, 10) / 10;
                 else
-                    step = random.NextDouble() * random.Next(-(int)Math.Abs(Value), (int)Math.Abs(Value));
+                    step = random.NextDouble() * random.Next(-(int)Math.Abs(rangeValue/2), (int)Math.Abs(rangeValue/2));
                 lastPressure = nextPressure + step;
-                if (lastPressure > MaxValue) { lastPressure = MaxValue; }
-                else if (lastPressure < Value) { lastPressure = Value; }
+                if (lastPressure > MaxValue) 
+                    lastPressure = MaxValue;
+                else if (lastPressure < MinValue)  
+                    lastPressure = MinValue; 
                 nextPressure = lastPressure;
             }
             else // режимы роста и падения
             {
                 step = Value / 10;
-                nextPressure = (step > 0) ? lastPressure + step : lastPressure - Math.Abs(step);
+                nextPressure = lastPressure + step;
                 lastPressure = nextPressure;
             }
 
-            X += interval;
-            values.XValues.Add(TimeSpan.FromSeconds(0).Add(TimeSpan.FromMilliseconds(X)));  // устанавливаем новую координату Х
+            IntervalCounter += interval;
+            values.XValues.Add(TimeSpan.FromMilliseconds(IntervalCounter));  // устанавливаем новую координату Х
             values.YValues.Add(Math.Round(nextPressure, 2)); // устанавливаем новую координату Y
 
             return values;

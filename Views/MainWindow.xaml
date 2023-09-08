@@ -84,11 +84,8 @@
                 <s:TimeSpanAxis AxisTitle="Время"/>
             </s:SciChartSurface.XAxis>
             <s:SciChartSurface.YAxis >
-                <s:NumericAxis  AxisTitle ="Давление"  LabelProvider="{StaticResource LP}"/>               
+                <s:NumericAxis  AxisTitle ="Давление"  LabelProvider="{StaticResource LP}"/>
             </s:SciChartSurface.YAxis >
-
-            
-
         </s:SciChartSurface>
     </Grid>
 </Window>

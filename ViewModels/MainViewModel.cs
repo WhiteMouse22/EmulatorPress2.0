@@ -20,8 +20,7 @@ namespace EmulatorPress.ViewModels
         private IDialogService dialogService = new DialogService();
         private SettingPress setting = new();
 
-
-        #region renderableSeries // отрисовывает график
+        #region renderableSeries
         private ObservableCollection<IRenderableSeriesViewModel> renderableSeries;
         public ObservableCollection<IRenderableSeriesViewModel> RenderableSeries
         {
@@ -114,20 +113,8 @@ namespace EmulatorPress.ViewModels
                 };
             }
         }
-        #endregion
-
-        private IRange xLimit = new DoubleRange(0, 100);
-        public IRange XLimit
-        {
-            get { return xLimit; }
-            set
-            {
-                xLimit = value;
-                OnPropertyChanged(nameof(XLimit));
-            }
-        }
-        
-        #region Значение выдержки
+        #endregion        
+        #region Выдержка
         private ObservableCollection<IAnnotationViewModel> annotations = new ObservableCollection<IAnnotationViewModel>();
         public ObservableCollection<IAnnotationViewModel> Annotations { get { return annotations; } }
         #endregion
@@ -145,6 +132,7 @@ namespace EmulatorPress.ViewModels
         }
         private void PerformOnEmulation()
         {
+            UpdateStatus();
             dummyDataProvider.signalType = setting.Type;
             dummyDataProvider.Value = setting.MinValue;
             dummyDataProvider.MaxValue = setting.MaxValue;
@@ -155,6 +143,7 @@ namespace EmulatorPress.ViewModels
             OnPropertyChanged(nameof(IsStartEnabled));
             isExcerptEnable = true;
             OnPropertyChanged(nameof(IsExcerptEnable));
+            
         }
         #endregion
         #region Стоп
@@ -191,7 +180,7 @@ namespace EmulatorPress.ViewModels
         private void PerformClearChart()
         {
             lineData.Clear();
-            dummyDataProvider.X = 1;
+            dummyDataProvider.IntervalCounter = 1;
             annotations.Clear();
         }
         #endregion
@@ -212,12 +201,17 @@ namespace EmulatorPress.ViewModels
             PerformOffEmulation();
             dialogService.ShowDialog<SettingPressViewModel>(result =>
             {
-                setting.LoadSettings();
-                OnPropertyChanged(nameof(SettingsStatus));
+                UpdateStatus();
             });
         }
+
+        private void UpdateStatus()
+        {
+            setting.LoadSettings();
+            OnPropertyChanged(nameof(SettingsStatus));
+        }
         #endregion
-        #region Выдержка
+        #region Установить выдержку
         private ActionCommand startExcerpt;
 
         public ICommand StartExcerpt

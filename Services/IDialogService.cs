@@ -8,7 +8,6 @@ namespace EmulatorPress.Services
 {
     internal interface IDialogService
     {
-        void ShowDialog(string name, Action<string> callback);
         void ShowDialog<ViewModel>(Action<string> callback);
     }
 }

@@ -16,9 +16,8 @@ namespace EmulatorPress.ViewModels
             get { return minValue; }
             set
             {
-                minValue = value; //(value>=maxValue) ? maxValue : value;
+                minValue = value;
                 OnPropertyChanged(nameof(MinValue));
-                //OnPropertyChanged(nameof(MaxValue));
             }
         }
         #endregion
@@ -29,7 +28,7 @@ namespace EmulatorPress.ViewModels
             get { return maxValue; }
             set
             {
-                maxValue = (value >= minValue) ? value : minValue;
+                maxValue = value;
                 OnPropertyChanged(nameof(MaxValue));
             }
         }
@@ -93,11 +92,13 @@ namespace EmulatorPress.ViewModels
         }
         private void PerformSaveSettings()
         {
-            setting.MinValue = minValue;
-            setting.MaxValue = maxValue;
+            setting.MinValue = (minValue < maxValue) ? minValue : maxValue;
+            setting.MaxValue = (minValue > maxValue) ? minValue : maxValue;
             setting.Type = signalType;
             setting.SaveSettings();
+
         }
+
         #endregion
 
         public SettingPressViewModel()

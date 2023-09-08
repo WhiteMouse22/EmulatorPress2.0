@@ -24,5 +24,11 @@ namespace EmulatorPress.Views
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var window = this.Parent as Window;
+            window.DialogResult = true;
+        }
     }
 }

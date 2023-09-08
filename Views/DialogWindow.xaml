@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EmulatorPress.Views"
         mc:Ignorable="d"
-        Title="DialogWindow" Height="350" Width="400">
+        Title="DialogWindow" Height="350" Width="400" WindowStyle="None" >
     <Grid>
         
     </Grid>
