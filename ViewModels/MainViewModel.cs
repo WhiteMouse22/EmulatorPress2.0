@@ -15,6 +15,7 @@ namespace EmulatorPress.ViewModels
 {
     public class MainViewModel : BindableObject
     {
+
         private readonly DummyDataProvider dummyDataProvider = new();
         private XyDataSeries<TimeSpan, double> lineData = new() { SeriesName = "Давление испытания" };
         private IDialogService dialogService = new DialogService();
